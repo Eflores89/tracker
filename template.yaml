@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: AWS::Serverless-2016-10-31
+Description: Daily tracker — buttons that write to Notion.
+
+Globals:
+  Function:
+    Runtime: nodejs20.x
+    Timeout: 10
+    MemorySize: 128
+    Environment:
+      Variables:
+        NOTION_TOKEN: !Ref NotionToken
+        NOTION_DATABASE_ID: !Ref NotionDatabaseId
+
+Parameters:
+  NotionToken:
+    Type: String
+    NoEcho: true
+    Description: Notion integration token
+  NotionDatabaseId:
+    Type: String
+    Description: Notion database ID for the tracker
+
+Resources:
+  TrackerApi:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowOrigin: "'*'"
+        AllowMethods: "'GET,POST,OPTIONS'"
+        AllowHeaders: "'Content-Type'"
+
+  GetTodayFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: lambda/getToday/
+      Events:
+        GetToday:
+          Type: Api
+          Properties:
+            RestApiId: !Ref TrackerApi
+            Path: /today
+            Method: GET
+
+  TrackFunction:
+    Type: AWS::Serverless::Function
+    Properties:
+      Handler: index.handler
+      CodeUri: lambda/track/
+      Events:
+        Track:
+          Type: Api
+          Properties:
+            RestApiId: !Ref TrackerApi
+            Path: /track
+            Method: POST
+
+Outputs:
+  ApiUrl:
+    Description: API Gateway endpoint URL
+    Value: !Sub "https://${TrackerApi}.execute-api.${AWS::Region}.amazonaws.com/prod"

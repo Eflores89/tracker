@@ -1,0 +1,123 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+    Helvetica, Arial, sans-serif;
+  background: #f7f7f5;
+  color: #37352f;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
+}
+
+#app {
+  width: 100%;
+  max-width: 480px;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.date {
+  font-size: 0.875rem;
+  color: #787774;
+  margin-bottom: 1.5rem;
+}
+
+.loading {
+  text-align: center;
+  padding: 3rem 0;
+  color: #787774;
+}
+
+/* Cards */
+.card {
+  background: #fff;
+  border: 1px solid #e3e2de;
+  border-radius: 8px;
+  padding: 1.25rem;
+  margin-bottom: 1rem;
+}
+
+.card h2 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+}
+
+.card .hint {
+  font-size: 0.8125rem;
+  color: #787774;
+  margin-bottom: 0.75rem;
+}
+
+.hidden {
+  display: none;
+}
+
+/* Buttons */
+.btn-group {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.btn {
+  appearance: none;
+  border: 1px solid #e3e2de;
+  background: #f7f7f5;
+  border-radius: 6px;
+  padding: 0.625rem 1.25rem;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: #37352f;
+  cursor: pointer;
+  transition: background 0.15s, border-color 0.15s;
+}
+
+.btn:hover {
+  background: #ededeb;
+  border-color: #d3d3cf;
+}
+
+.btn:active {
+  background: #e3e2de;
+}
+
+.btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.btn-water {
+  background: #dbeafe;
+  border-color: #93c5fd;
+  color: #1e40af;
+}
+
+.btn-water:hover {
+  background: #bfdbfe;
+}
+
+.btn-water:active {
+  background: #93c5fd;
+}
+
+/* All-done card */
+#all-done {
+  text-align: center;
+  padding: 3rem 1.25rem;
+}
+
+#all-done h2 {
+  font-size: 1.25rem;
+  color: #787774;
+}

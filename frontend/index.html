@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tracker</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main id="app">
+      <h1>Today</h1>
+      <p id="date" class="date"></p>
+
+      <div id="loading" class="loading">Loading&hellip;</div>
+
+      <!-- Water -->
+      <section id="card-water" class="card hidden">
+        <h2>Water</h2>
+        <p class="hint">
+          <span id="water-count">0</span> / 3 glasses
+        </p>
+        <div class="btn-group">
+          <button data-field="water" class="btn btn-water">+1 glass</button>
+        </div>
+      </section>
+
+      <!-- Exercise -->
+      <section id="card-exercise" class="card hidden">
+        <h2>Exercise</h2>
+        <div class="btn-group">
+          <button data-field="exercise" data-value="hard" class="btn">Hard</button>
+          <button data-field="exercise" data-value="soft" class="btn">Soft</button>
+        </div>
+      </section>
+
+      <!-- Sleep -->
+      <section id="card-sleep" class="card hidden">
+        <h2>Sleep</h2>
+        <div class="btn-group">
+          <button data-field="sleep" data-value="bad" class="btn">Bad</button>
+          <button data-field="sleep" data-value="good" class="btn">Good</button>
+          <button data-field="sleep" data-value="perfect" class="btn">Perfect</button>
+        </div>
+      </section>
+
+      <!-- Food: Breakfast -->
+      <section id="card-food_breakfast" class="card hidden">
+        <h2>Breakfast</h2>
+        <div class="btn-group">
+          <button data-field="food_breakfast" data-value="1" class="btn">1</button>
+          <button data-field="food_breakfast" data-value="2" class="btn">2</button>
+          <button data-field="food_breakfast" data-value="3" class="btn">3</button>
+          <button data-field="food_breakfast" data-value="4" class="btn">4</button>
+          <button data-field="food_breakfast" data-value="5" class="btn">5</button>
+        </div>
+      </section>
+
+      <!-- Food: Lunch -->
+      <section id="card-food_lunch" class="card hidden">
+        <h2>Lunch</h2>
+        <div class="btn-group">
+          <button data-field="food_lunch" data-value="1" class="btn">1</button>
+          <button data-field="food_lunch" data-value="2" class="btn">2</button>
+          <button data-field="food_lunch" data-value="3" class="btn">3</button>
+          <button data-field="food_lunch" data-value="4" class="btn">4</button>
+          <button data-field="food_lunch" data-value="5" class="btn">5</button>
+        </div>
+      </section>
+
+      <!-- Food: Dinner -->
+      <section id="card-food_dinner" class="card hidden">
+        <h2>Dinner</h2>
+        <div class="btn-group">
+          <button data-field="food_dinner" data-value="1" class="btn">1</button>
+          <button data-field="food_dinner" data-value="2" class="btn">2</button>
+          <button data-field="food_dinner" data-value="3" class="btn">3</button>
+          <button data-field="food_dinner" data-value="4" class="btn">4</button>
+          <button data-field="food_dinner" data-value="5" class="btn">5</button>
+        </div>
+      </section>
+
+      <!-- Food: Snacks -->
+      <section id="card-food_snacks" class="card hidden">
+        <h2>Snacks</h2>
+        <div class="btn-group">
+          <button data-field="food_snacks" data-value="1" class="btn">1</button>
+          <button data-field="food_snacks" data-value="2" class="btn">2</button>
+          <button data-field="food_snacks" data-value="3" class="btn">3</button>
+          <button data-field="food_snacks" data-value="4" class="btn">4</button>
+          <button data-field="food_snacks" data-value="5" class="btn">5</button>
+        </div>
+      </section>
+
+      <!-- All done -->
+      <section id="all-done" class="card hidden">
+        <h2>All done for today!</h2>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
