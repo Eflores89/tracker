@@ -1,12 +1,12 @@
 /*
  * Tracker — frontend logic.
  *
- * Set API_BASE to your deployed API Gateway URL, e.g.:
- *   const API_BASE = "https://abc123.execute-api.us-east-1.amazonaws.com/prod";
- *
- * During local development you can point it at a local server.
+ * Set these URLs to your deployed Lambda Function URLs, e.g.:
+ *   const GET_TODAY_URL = "https://abc123.lambda-url.us-east-1.on.aws/";
+ *   const TRACK_URL = "https://def456.lambda-url.us-east-1.on.aws/";
  */
-const API_BASE = ""; // TODO: set after deploying
+const GET_TODAY_URL = "https://pcfqe76lx4k3nojlnrosr64iom0izkbv.lambda-url.us-east-1.on.aws/";
+const TRACK_URL = "https://vrskp6njjbbhbxoyo2j7ipjbay0wnkqb.lambda-url.us-east-1.on.aws/";
 
 // ---- State ----
 let state = null;
@@ -51,14 +51,14 @@ function render() {
 // ---- API calls ----
 
 async function fetchToday() {
-  const res = await fetch(`${API_BASE}/today`);
+  const res = await fetch(GET_TODAY_URL);
   if (!res.ok) throw new Error("Failed to load today's data");
   state = await res.json();
   render();
 }
 
 async function track(field, value) {
-  const res = await fetch(`${API_BASE}/track`, {
+  const res = await fetch(TRACK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ field, value }),

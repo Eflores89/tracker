@@ -17,47 +17,47 @@ Parameters:
     Type: String
     NoEcho: true
     Description: Notion integration token
+    Default: PLACEHOLDER
   NotionDatabaseId:
     Type: String
     Description: Notion database ID for the tracker
+    Default: PLACEHOLDER
 
 Resources:
-  TrackerApi:
-    Type: AWS::Serverless::Api
-    Properties:
-      StageName: prod
-      Cors:
-        AllowOrigin: "'*'"
-        AllowMethods: "'GET,POST,OPTIONS'"
-        AllowHeaders: "'Content-Type'"
-
   GetTodayFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.handler
-      CodeUri: lambda/getToday/
-      Events:
-        GetToday:
-          Type: Api
-          Properties:
-            RestApiId: !Ref TrackerApi
-            Path: /today
-            Method: GET
+      Handler: getToday/index.handler
+      CodeUri: lambda/
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+            - "*"
+          AllowMethods:
+            - GET
+          AllowHeaders:
+            - Content-Type
 
   TrackFunction:
     Type: AWS::Serverless::Function
     Properties:
-      Handler: index.handler
-      CodeUri: lambda/track/
-      Events:
-        Track:
-          Type: Api
-          Properties:
-            RestApiId: !Ref TrackerApi
-            Path: /track
-            Method: POST
+      Handler: track/index.handler
+      CodeUri: lambda/
+      FunctionUrlConfig:
+        AuthType: NONE
+        Cors:
+          AllowOrigins:
+            - "*"
+          AllowMethods:
+            - POST
+          AllowHeaders:
+            - Content-Type
 
 Outputs:
-  ApiUrl:
-    Description: API Gateway endpoint URL
-    Value: !Sub "https://${TrackerApi}.execute-api.${AWS::Region}.amazonaws.com/prod"
+  GetTodayUrl:
+    Description: URL for the getToday function
+    Value: !GetAtt GetTodayFunctionUrl.FunctionUrl
+  TrackUrl:
+    Description: URL for the track function
+    Value: !GetAtt TrackFunctionUrl.FunctionUrl
