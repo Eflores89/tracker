@@ -11,20 +11,14 @@ export async function handler(event) {
 
     return {
       statusCode: 200,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(parseRow(row)),
     };
   } catch (err) {
     console.error(err);
     return {
       statusCode: 500,
-      headers: {
-        "Content-Type": "application/json",
-        "Access-Control-Allow-Origin": "*",
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ error: err.message }),
     };
   }

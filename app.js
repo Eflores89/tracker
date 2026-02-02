@@ -48,6 +48,28 @@ function render() {
   allDone ? show($("#all-done")) : hide($("#all-done"));
 }
 
+// ---- Optimistic state update ----
+
+function applyOptimistic(field, value) {
+  switch (field) {
+    case "water":
+      state.water = Math.min((state.water ?? 0) + 1, 3);
+      break;
+    case "exercise":
+      state.exercise = value;
+      break;
+    case "sleep":
+      state.sleep = value;
+      break;
+    case "food_breakfast":
+    case "food_lunch":
+    case "food_dinner":
+    case "food_snacks":
+      state[field] = Number(value);
+      break;
+  }
+}
+
 // ---- API calls ----
 
 async function fetchToday() {
@@ -57,15 +79,23 @@ async function fetchToday() {
   render();
 }
 
-async function track(field, value) {
-  const res = await fetch(TRACK_URL, {
+function track(field, value) {
+  fetch(TRACK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ field, value }),
-  });
-  if (!res.ok) throw new Error("Failed to save");
-  state = await res.json();
-  render();
+  })
+    .then((res) => {
+      if (!res.ok) throw new Error("Failed to save");
+      return res.json();
+    })
+    .then((serverState) => {
+      state = serverState;
+      render();
+    })
+    .catch((err) => {
+      console.error(err);
+    });
 }
 
 // ---- Event listeners ----
@@ -77,19 +107,13 @@ document.addEventListener("click", (e) => {
   const field = btn.dataset.field;
   const value = btn.dataset.value ?? null;
 
-  // Disable all buttons in the same card while saving
-  const card = btn.closest(".card");
-  const buttons = card.querySelectorAll("button");
-  buttons.forEach((b) => (b.disabled = true));
+  // Optimistic: update state and re-render immediately
+  const snapshot = JSON.parse(JSON.stringify(state));
+  applyOptimistic(field, value);
+  render();
 
-  track(field, value)
-    .catch((err) => {
-      console.error(err);
-      alert("Something went wrong. Please try again.");
-    })
-    .finally(() => {
-      buttons.forEach((b) => (b.disabled = false));
-    });
+  // Fire API in background
+  track(field, value);
 });
 
 // ---- Init ----
