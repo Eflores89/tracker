@@ -50,17 +50,57 @@ h1 {
 .card h2 {
   font-size: 1rem;
   font-weight: 600;
-  margin-bottom: 0.75rem;
+  margin-bottom: 0;
 }
 
 .card .hint {
   font-size: 0.8125rem;
   color: #787774;
-  margin-bottom: 0.75rem;
+  margin-top: 0.125rem;
 }
 
 .hidden {
   display: none;
+}
+
+/* Card header with icon */
+.card-header {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+/* Icon circles */
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 8px;
+  font-size: 1.125rem;
+  flex-shrink: 0;
+}
+
+.icon-blue {
+  background: #dbeafe;
+}
+
+.icon-green {
+  background: #dcfce7;
+}
+
+.icon-purple {
+  background: #ede9fe;
+}
+
+.icon-amber {
+  background: #fef3c7;
+}
+
+.icon-red {
+  background: #fee2e2;
 }
 
 /* Buttons */
