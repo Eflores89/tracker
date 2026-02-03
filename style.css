@@ -41,10 +41,16 @@ h1 {
 /* Cards */
 .card {
   background: #fff;
-  border: 1px solid #e3e2de;
-  border-radius: 8px;
+  border: 1.5px solid #e3e2de;
+  border-radius: 14px;
   padding: 1.25rem;
   margin-bottom: 1rem;
+  transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
 .card h2 {
@@ -63,6 +69,57 @@ h1 {
   display: none;
 }
 
+/* Card color backgrounds */
+.card-blue {
+  background: #eff6ff;
+  border-color: #bfdbfe;
+}
+
+.card-blue:hover {
+  border-color: #60a5fa;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.card-green {
+  background: #f0fdf4;
+  border-color: #bbf7d0;
+}
+
+.card-green:hover {
+  border-color: #4ade80;
+  box-shadow: 0 4px 12px rgba(34, 197, 94, 0.15);
+}
+
+.card-purple {
+  background: #f5f3ff;
+  border-color: #ddd6fe;
+}
+
+.card-purple:hover {
+  border-color: #a78bfa;
+  box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+}
+
+.card-amber {
+  background: #fffbeb;
+  border-color: #fde68a;
+}
+
+.card-amber:hover {
+  border-color: #fbbf24;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.15);
+}
+
+.card-red {
+  background: #fef2f2;
+  border-color: #fecaca;
+}
+
+.card-red:hover {
+  border-color: #f87171;
+  box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
+}
+
 /* Card header with icon */
 .card-header {
   display: flex;
@@ -76,10 +133,10 @@ h1 {
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.25rem;
-  height: 2.25rem;
-  border-radius: 8px;
-  font-size: 1.125rem;
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 10px;
+  font-size: 1.25rem;
   flex-shrink: 0;
 }
 
@@ -113,23 +170,25 @@ h1 {
 .btn {
   appearance: none;
   border: 1px solid #e3e2de;
-  background: #f7f7f5;
-  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.7);
+  border-radius: 8px;
   padding: 0.625rem 1.25rem;
   font-size: 0.9375rem;
   font-weight: 500;
   color: #37352f;
   cursor: pointer;
-  transition: background 0.15s, border-color 0.15s;
+  transition: background 0.15s, border-color 0.15s, transform 0.15s;
 }
 
 .btn:hover {
-  background: #ededeb;
+  background: rgba(255, 255, 255, 0.95);
   border-color: #d3d3cf;
+  transform: translateY(-1px);
 }
 
 .btn:active {
   background: #e3e2de;
+  transform: translateY(0);
 }
 
 .btn:disabled {
