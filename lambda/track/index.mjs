@@ -43,7 +43,7 @@ function buildPatch(field, value, currentRow) {
 export async function handler(event) {
   try {
     const body = JSON.parse(event.body);
-    const { field, value } = body;
+    const { field, value, date: clientDate } = body;
 
     if (!field || !VALID_FIELDS.includes(field)) {
       return {
@@ -56,7 +56,7 @@ export async function handler(event) {
       };
     }
 
-    const date = todayISO();
+    const date = clientDate || todayISO();
     let row = await getRowByDate(date);
 
     if (!row) {
