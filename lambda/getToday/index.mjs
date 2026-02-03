@@ -2,7 +2,8 @@ import { getRowByDate, createRow, parseRow, todayISO } from "../lib/notion.mjs";
 
 export async function handler(event) {
   try {
-    const date = todayISO();
+    const params = new URLSearchParams(event.queryStringParameters || {});
+    const date = params.get("date") || todayISO();
     let row = await getRowByDate(date);
 
     if (!row) {

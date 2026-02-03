@@ -11,6 +11,15 @@ const TRACK_URL = "https://vrskp6njjbbhbxoyo2j7ipjbay0wnkqb.lambda-url.us-east-1
 // ---- State ----
 let state = null;
 
+// ---- Date helper ----
+function localTodayISO() {
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 // ---- DOM helpers ----
 const $ = (sel) => document.querySelector(sel);
 const show = (el) => el.classList.remove("hidden");
@@ -73,7 +82,8 @@ function applyOptimistic(field, value) {
 // ---- API calls ----
 
 async function fetchToday() {
-  const res = await fetch(GET_TODAY_URL);
+  const date = localTodayISO();
+  const res = await fetch(`${GET_TODAY_URL}?date=${date}`);
   if (!res.ok) throw new Error("Failed to load today's data");
   state = await res.json();
   render();
@@ -83,7 +93,7 @@ function track(field, value) {
   fetch(TRACK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ field, value }),
+    body: JSON.stringify({ field, value, date: localTodayISO() }),
   })
     .then((res) => {
       if (!res.ok) throw new Error("Failed to save");
