@@ -51,13 +51,11 @@ function render() {
   const moodDone = (state.mood?.length ?? 0) >= 4;
   moodDone ? hide($("#card-mood")) : show($("#card-mood"));
   $("#mood-count").textContent = state.mood?.length ?? 0;
-  const moodSelect = $("#mood-select");
-  for (const opt of moodSelect.options) {
-    if (opt.value) {
-      opt.disabled = state.mood?.includes(opt.value) ?? false;
-    }
-  }
-  moodSelect.value = "";
+  document.querySelectorAll("#card-mood .btn-mood").forEach((btn) => {
+    const selected = state.mood?.includes(btn.dataset.value) ?? false;
+    btn.classList.toggle("btn-mood-active", selected);
+    btn.disabled = selected || moodDone;
+  });
 
   // Food: each visible until rated (value > 0)
   const meals = ["food_breakfast", "food_lunch", "food_dinner", "food_snacks"];
@@ -152,16 +150,6 @@ document.addEventListener("click", (e) => {
 
   // Fire API in background
   track(field, value);
-});
-
-document.addEventListener("change", (e) => {
-  if (e.target.id !== "mood-select") return;
-  const value = e.target.value;
-  if (!value) return;
-
-  applyOptimistic("mood", value);
-  render();
-  track("mood", value);
 });
 
 // ---- Init ----
