@@ -13,11 +13,7 @@ let state = null;
 
 // ---- Date helper ----
 function localTodayISO() {
-  const d = new Date();
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, "0");
-  const day = String(d.getDate()).padStart(2, "0");
-  return `${year}-${month}-${day}`;
+  return new Date().toISOString().slice(0, 10);
 }
 
 // ---- DOM helpers ----
@@ -109,7 +105,9 @@ function applyOptimistic(field, value) {
 
 async function fetchToday() {
   const date = localTodayISO();
-  const res = await fetch(`${GET_TODAY_URL}?date=${date}`);
+  const url = new URL(GET_TODAY_URL);
+  url.searchParams.set("date", date);
+  const res = await fetch(url);
   if (!res.ok) throw new Error("Failed to load today's data");
   state = await res.json();
   render();
