@@ -8,8 +8,10 @@ import {
 
 const VALID_FIELDS = [
   "water",
+  "coffee",
   "exercise",
   "sleep",
+  "mood",
   "food_breakfast",
   "food_lunch",
   "food_dinner",
@@ -26,10 +28,23 @@ function buildPatch(field, value, currentRow) {
       const next = Math.min(current + 1, 3);
       return { water: { number: next } };
     }
+    case "coffee": {
+      const current = currentRow.coffee ?? 0;
+      const next = Math.min(current + 1, 3);
+      return { coffee: { number: next } };
+    }
     case "exercise":
       return { exercise: { select: { name: value } } };
     case "sleep":
       return { sleep: { select: { name: value } } };
+    case "mood": {
+      const current = currentRow.mood ?? [];
+      const next =
+        current.includes(value) || current.length >= 4
+          ? current
+          : [...current, value];
+      return { mood: { multi_select: next.map((name) => ({ name })) } };
+    }
     case "food_breakfast":
     case "food_lunch":
     case "food_dinner":

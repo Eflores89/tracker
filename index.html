@@ -28,6 +28,20 @@
         </div>
       </section>
 
+      <!-- Coffee -->
+      <section id="card-coffee" class="card card-brown hidden">
+        <div class="card-header">
+          <span class="icon icon-brown">&#x2615;</span>
+          <div>
+            <h2>Coffee</h2>
+            <p class="hint"><span id="coffee-count">0</span> / 3 cups</p>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button data-field="coffee" class="btn btn-coffee">+1 cup</button>
+        </div>
+      </section>
+
       <!-- Exercise -->
       <section id="card-exercise" class="card card-green hidden">
         <div class="card-header">
@@ -50,6 +64,34 @@
           <button data-field="sleep" data-value="bad" class="btn">Bad</button>
           <button data-field="sleep" data-value="good" class="btn">Good</button>
           <button data-field="sleep" data-value="perfect" class="btn">Perfect</button>
+        </div>
+      </section>
+
+      <!-- Mood -->
+      <section id="card-mood" class="card card-pink hidden">
+        <div class="card-header">
+          <span class="icon icon-pink">&#x1F60A;</span>
+          <div>
+            <h2>Mood</h2>
+            <p class="hint"><span id="mood-count">0</span> / 4 selected</p>
+          </div>
+        </div>
+        <div class="btn-group">
+          <select id="mood-select" class="btn">
+            <option value="">Pick a mood…</option>
+            <option value="happy">Happy</option>
+            <option value="excited">Excited</option>
+            <option value="sad">Sad</option>
+            <option value="anxious">Anxious</option>
+            <option value="depressed">Depressed</option>
+            <option value="bored">Bored</option>
+            <option value="productive">Productive</option>
+            <option value="cheerful">Cheerful</option>
+            <option value="energized">Energized</option>
+            <option value="tired">Tired</option>
+            <option value="angry">Angry</option>
+            <option value="nervous">Nervous</option>
+          </select>
         </div>
       </section>
 

@@ -123,6 +123,26 @@ h1 {
   box-shadow: 0 4px 12px rgba(239, 68, 68, 0.15);
 }
 
+.card-brown {
+  background: #fef7ed;
+  border-color: #fed7aa;
+}
+
+.card-brown:hover {
+  border-color: #fb923c;
+  box-shadow: 0 4px 12px rgba(251, 146, 60, 0.15);
+}
+
+.card-pink {
+  background: #fdf2f8;
+  border-color: #fbcfe8;
+}
+
+.card-pink:hover {
+  border-color: #f472b6;
+  box-shadow: 0 4px 12px rgba(244, 114, 182, 0.15);
+}
+
 /* Card header with icon */
 .card-header {
   display: flex;
@@ -161,6 +181,14 @@ h1 {
 
 .icon-red {
   background: #fee2e2;
+}
+
+.icon-brown {
+  background: #ffedd5;
+}
+
+.icon-pink {
+  background: #fce7f3;
 }
 
 /* Buttons */
@@ -212,6 +240,20 @@ h1 {
 
 .btn-water:active {
   background: #93c5fd;
+}
+
+.btn-coffee {
+  background: #ffedd5;
+  border-color: #fdba74;
+  color: #9a3412;
+}
+
+.btn-coffee:hover {
+  background: #fed7aa;
+}
+
+.btn-coffee:active {
+  background: #fdba74;
 }
 
 /* All-done card */

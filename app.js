@@ -36,11 +36,28 @@ function render() {
   waterDone ? hide($("#card-water")) : show($("#card-water"));
   $("#water-count").textContent = state.water;
 
+  // Coffee: visible until 3
+  const coffeeDone = state.coffee >= 3;
+  coffeeDone ? hide($("#card-coffee")) : show($("#card-coffee"));
+  $("#coffee-count").textContent = state.coffee;
+
   // Exercise: visible until selected
   state.exercise ? hide($("#card-exercise")) : show($("#card-exercise"));
 
   // Sleep: visible until selected
   state.sleep ? hide($("#card-sleep")) : show($("#card-sleep"));
+
+  // Mood: visible until 4 selected
+  const moodDone = (state.mood?.length ?? 0) >= 4;
+  moodDone ? hide($("#card-mood")) : show($("#card-mood"));
+  $("#mood-count").textContent = state.mood?.length ?? 0;
+  const moodSelect = $("#mood-select");
+  for (const opt of moodSelect.options) {
+    if (opt.value) {
+      opt.disabled = state.mood?.includes(opt.value) ?? false;
+    }
+  }
+  moodSelect.value = "";
 
   // Food: each visible until rated (value > 0)
   const meals = ["food_breakfast", "food_lunch", "food_dinner", "food_snacks"];
@@ -51,8 +68,10 @@ function render() {
   // All-done check
   const allDone =
     waterDone &&
+    coffeeDone &&
     state.exercise &&
     state.sleep &&
+    moodDone &&
     meals.every((m) => state[m] > 0);
   allDone ? show($("#all-done")) : hide($("#all-done"));
 }
@@ -64,11 +83,20 @@ function applyOptimistic(field, value) {
     case "water":
       state.water = Math.min((state.water ?? 0) + 1, 3);
       break;
+    case "coffee":
+      state.coffee = Math.min((state.coffee ?? 0) + 1, 3);
+      break;
     case "exercise":
       state.exercise = value;
       break;
     case "sleep":
       state.sleep = value;
+      break;
+    case "mood":
+      if (!state.mood) state.mood = [];
+      if (!state.mood.includes(value) && state.mood.length < 4) {
+        state.mood = [...state.mood, value];
+      }
       break;
     case "food_breakfast":
     case "food_lunch":
@@ -124,6 +152,16 @@ document.addEventListener("click", (e) => {
 
   // Fire API in background
   track(field, value);
+});
+
+document.addEventListener("change", (e) => {
+  if (e.target.id !== "mood-select") return;
+  const value = e.target.value;
+  if (!value) return;
+
+  applyOptimistic("mood", value);
+  render();
+  track("mood", value);
 });
 
 // ---- Init ----
