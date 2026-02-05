@@ -256,6 +256,34 @@ h1 {
   background: #fdba74;
 }
 
+/* Wide card layout (header on top, buttons below) */
+.card-wide {
+  flex-wrap: wrap;
+}
+
+.card-wide .btn-group-wide {
+  margin-left: 0;
+  width: 100%;
+}
+
+/* Mood buttons */
+.btn-mood {
+  padding: 0.5rem 0.875rem;
+  font-size: 0.8125rem;
+}
+
+.btn-mood-active {
+  background: #f472b6;
+  border-color: #ec4899;
+  color: #fff;
+}
+
+.btn-mood-active:hover {
+  background: #ec4899;
+  border-color: #db2777;
+  color: #fff;
+}
+
 /* All-done card */
 #all-done {
   justify-content: center;
