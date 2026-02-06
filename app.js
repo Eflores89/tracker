@@ -11,6 +11,27 @@ const TRACK_URL = "https://vrskp6njjbbhbxoyo2j7ipjbay0wnkqb.lambda-url.us-east-1
 // ---- State ----
 let state = null;
 
+const STORAGE_KEY = "tracker-state";
+
+function saveState() {
+  if (state) localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+}
+
+function loadState() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return null;
+    const saved = JSON.parse(raw);
+    if (saved.date !== localTodayISO()) {
+      localStorage.removeItem(STORAGE_KEY);
+      return null;
+    }
+    return saved;
+  } catch {
+    return null;
+  }
+}
+
 // ---- Date helper ----
 function localTodayISO() {
   const d = new Date();
@@ -114,6 +135,7 @@ async function fetchToday() {
   const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to load today's data");
   state = await res.json();
+  saveState();
   render();
 }
 
@@ -129,6 +151,7 @@ function track(field, value) {
     })
     .then((serverState) => {
       state = serverState;
+      saveState();
       render();
     })
     .catch((err) => {
@@ -146,8 +169,8 @@ document.addEventListener("click", (e) => {
   const value = btn.dataset.value ?? null;
 
   // Optimistic: update state and re-render immediately
-  const snapshot = JSON.parse(JSON.stringify(state));
   applyOptimistic(field, value);
+  saveState();
   render();
 
   // Fire API in background
@@ -155,9 +178,14 @@ document.addEventListener("click", (e) => {
 });
 
 // ---- Init ----
+const cached = loadState();
+if (cached) {
+  state = cached;
+  render();
+}
 fetchToday().catch((err) => {
   console.error(err);
-  $("#loading").textContent = "Could not load data. Check your connection.";
+  if (!cached) $("#loading").textContent = "Could not load data. Check your connection.";
 });
 
 // Refetch state when the page becomes visible again (e.g. tab switch, app
