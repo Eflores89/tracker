@@ -13,7 +13,11 @@ let state = null;
 
 // ---- Date helper ----
 function localTodayISO() {
-  return new Date().toISOString().slice(0, 10);
+  const d = new Date();
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 // ---- DOM helpers ----
@@ -154,4 +158,13 @@ document.addEventListener("click", (e) => {
 fetchToday().catch((err) => {
   console.error(err);
   $("#loading").textContent = "Could not load data. Check your connection.";
+});
+
+// Refetch state when the page becomes visible again (e.g. tab switch, app
+// resume, or back-forward cache restore) so that changes made on other
+// devices are picked up.
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    fetchToday().catch((err) => console.error(err));
+  }
 });
