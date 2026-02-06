@@ -111,7 +111,7 @@ async function fetchToday() {
   const date = localTodayISO();
   const url = new URL(GET_TODAY_URL);
   url.searchParams.set("date", date);
-  const res = await fetch(url);
+  const res = await fetch(url, { cache: "no-store" });
   if (!res.ok) throw new Error("Failed to load today's data");
   state = await res.json();
   render();
