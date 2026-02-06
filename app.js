@@ -12,6 +12,7 @@ const TRACK_URL = "https://vrskp6njjbbhbxoyo2j7ipjbay0wnkqb.lambda-url.us-east-1
 let state = null;
 
 const STORAGE_KEY = "tracker-state";
+const PENDING_KEY = "tracker-pending";
 
 function saveState() {
   if (state) localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
@@ -24,12 +25,41 @@ function loadState() {
     const saved = JSON.parse(raw);
     if (saved.date !== localTodayISO()) {
       localStorage.removeItem(STORAGE_KEY);
+      localStorage.removeItem(PENDING_KEY);
       return null;
     }
     return saved;
   } catch {
     return null;
   }
+}
+
+function pushPending(field, value) {
+  const queue = JSON.parse(localStorage.getItem(PENDING_KEY) || "[]");
+  queue.push({ field, value, date: localTodayISO() });
+  localStorage.setItem(PENDING_KEY, JSON.stringify(queue));
+}
+
+function clearPending() {
+  localStorage.removeItem(PENDING_KEY);
+}
+
+async function flushPending() {
+  const queue = JSON.parse(localStorage.getItem(PENDING_KEY) || "[]");
+  if (queue.length === 0) return;
+  for (const op of queue) {
+    try {
+      const res = await fetch(TRACK_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(op),
+      });
+      if (!res.ok) return;
+    } catch {
+      return;
+    }
+  }
+  clearPending();
 }
 
 // ---- Date helper ----
@@ -140,6 +170,7 @@ async function fetchToday() {
 }
 
 function track(field, value) {
+  pushPending(field, value);
   fetch(TRACK_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
@@ -150,6 +181,7 @@ function track(field, value) {
       return res.json();
     })
     .then((serverState) => {
+      clearPending();
       state = serverState;
       saveState();
       render();
@@ -183,10 +215,12 @@ if (cached) {
   state = cached;
   render();
 }
-fetchToday().catch((err) => {
-  console.error(err);
-  if (!cached) $("#loading").textContent = "Could not load data. Check your connection.";
-});
+flushPending()
+  .then(() => fetchToday())
+  .catch((err) => {
+    console.error(err);
+    if (!cached) $("#loading").textContent = "Could not load data. Check your connection.";
+  });
 
 // Refetch state when the page becomes visible again (e.g. tab switch, app
 // resume, or back-forward cache restore) so that changes made on other
