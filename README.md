@@ -1,74 +1,103 @@
 # Tracker
 
-A dead-simple daily tracker. Open the page, press buttons, done. Data is stored in a Notion database.
+A dead-simple daily tracker. Open the page, press buttons, done. Data is stored in Supabase (Postgres).
+
+Completed items disappear for the day and reappear the next morning. A GitHub-style heatmap shows your streak.
 
 ## What it tracks
 
-| Item | Interaction | Done when… |
+| Item | Interaction | Done when... |
 |------|------------|------------|
 | Water | "+1 glass" button | 3 glasses logged |
+| Coffee | "+1 cup" button | 3 cups logged |
 | Exercise | "Hard" or "Soft" button | Either pressed |
 | Sleep | "Bad", "Good", or "Perfect" button | Any pressed |
-| Breakfast | Rate 1–5 | Rated |
-| Lunch | Rate 1–5 | Rated |
-| Dinner | Rate 1–5 | Rated |
-| Snacks | Rate 1–5 | Rated |
-
-Once a tracker is complete for the day it disappears from view.
+| Mood | Select mood tags | 4 selected |
+| Breakfast | Rate 1-5 | Rated |
+| Lunch | Rate 1-5 | Rated |
+| Dinner | Rate 1-5 | Rated |
+| Snacks | Rate 1-5 | Rated |
 
 ## Architecture
 
 ```
-Browser  →  API Gateway  →  Lambda  →  Notion API
-(HTML/CSS/JS)                          (database)
+Browser (GitHub Pages)  -->  Supabase REST API  -->  Postgres
 ```
+
+No Lambda, no middleware. The frontend calls Supabase directly.
 
 ## Setup
 
-### 1. Notion
+### 1. Create a Supabase project
 
-1. Create a Notion integration at https://www.notion.so/my-integrations and copy the token.
-2. Create a Notion database with these properties:
-   - `date` — Date
-   - `water` — Number
-   - `exercise` — Select (options: `hard`, `soft`)
-   - `sleep` — Select (options: `bad`, `good`, `perfect`)
-   - `food_breakfast` — Number
-   - `food_lunch` — Number
-   - `food_dinner` — Number
-   - `food_snacks` — Number
-3. Share the database with your integration.
-4. Copy the database ID from the URL (the 32-character hex string).
+1. Go to https://supabase.com and create a free project.
+2. In the SQL Editor, run:
 
-### 2. Deploy (AWS SAM)
+```sql
+CREATE TABLE daily_logs (
+  date DATE PRIMARY KEY,
+  water INTEGER DEFAULT 0,
+  coffee INTEGER DEFAULT 0,
+  exercise TEXT,
+  sleep TEXT,
+  mood TEXT DEFAULT '[]',
+  food_breakfast INTEGER DEFAULT 0,
+  food_lunch INTEGER DEFAULT 0,
+  food_dinner INTEGER DEFAULT 0,
+  food_snacks INTEGER DEFAULT 0
+);
 
-```bash
-sam build
-sam deploy --guided
+-- Allow anonymous reads and writes (personal tracker, no auth needed)
+ALTER TABLE daily_logs ENABLE ROW LEVEL SECURITY;
+CREATE POLICY "Allow all" ON daily_logs FOR ALL USING (true) WITH CHECK (true);
 ```
 
-You will be prompted for:
-- `NotionToken` — your Notion integration token
-- `NotionDatabaseId` — the database ID from step 1
+3. Go to **Settings > API** and copy:
+   - **Project URL** (e.g. `https://xxxx.supabase.co`)
+   - **anon public** key
 
-After deployment, note the `ApiUrl` output.
+### 2. Configure the frontend
 
-### 3. Frontend
+Open `app.js` and replace the placeholders:
 
-1. Open `frontend/app.js` and set `API_BASE` to your API Gateway URL.
-2. Host the `frontend/` folder anywhere (S3, Netlify, Vercel, or just open `index.html` locally).
+```js
+const SUPABASE_URL = "https://xxxx.supabase.co";
+const SUPABASE_ANON_KEY = "eyJ...";
+```
+
+### 3. Deploy
+
+Host the files on GitHub Pages (or anywhere static). The repo already has a GitHub Actions workflow for Pages deployment.
 
 ## Local development
 
-Serve the frontend locally:
-
 ```bash
-npm run dev
-# opens http://localhost:8080
+npx serve .
+# opens http://localhost:3000
 ```
 
-For the API you can use SAM local:
+## Analyzing your data
 
-```bash
-sam local start-api
+Connect to your Supabase Postgres database with any SQL client:
+
+```sql
+-- Weekly averages
+SELECT date_trunc('week', date) AS week, AVG(water), AVG(food_breakfast)
+FROM daily_logs GROUP BY 1 ORDER BY 1;
+
+-- Days you exercised hard
+SELECT date, exercise FROM daily_logs WHERE exercise = 'hard';
+
+-- Completion rate per day
+SELECT date,
+  (CASE WHEN water >= 3 THEN 1 ELSE 0 END +
+   CASE WHEN coffee >= 3 THEN 1 ELSE 0 END +
+   CASE WHEN exercise IS NOT NULL THEN 1 ELSE 0 END +
+   CASE WHEN sleep IS NOT NULL THEN 1 ELSE 0 END +
+   CASE WHEN mood != '[]' AND LENGTH(mood) > 5 THEN 1 ELSE 0 END +
+   CASE WHEN food_breakfast > 0 THEN 1 ELSE 0 END +
+   CASE WHEN food_lunch > 0 THEN 1 ELSE 0 END +
+   CASE WHEN food_dinner > 0 THEN 1 ELSE 0 END +
+   CASE WHEN food_snacks > 0 THEN 1 ELSE 0 END) AS completed_count
+FROM daily_logs ORDER BY date;
 ```
