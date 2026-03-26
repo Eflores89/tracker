@@ -269,7 +269,7 @@ function enqueueSave(fieldId) {
     if (!current) return;
     const valueToSave = current.value;
     try {
-      const rows = await supaPost("tracker_entries", { field_id: fieldId, date: today, value: valueToSave }, "return=representation,resolution=merge-duplicates");
+      const rows = await supa("POST", "tracker_entries", "on_conflict=field_id,date", { field_id: fieldId, date: today, value: valueToSave }, "return=representation,resolution=merge-duplicates");
       // Only update from server if the value hasn't changed since we sent it
       // (another click may have updated it optimistically while we were saving)
       if (rows && rows[0] && entries[fieldId]?.value === valueToSave) {
