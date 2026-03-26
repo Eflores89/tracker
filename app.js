@@ -267,9 +267,14 @@ function enqueueSave(fieldId) {
   saveQueues[fieldId] = saveQueues[fieldId].then(async () => {
     const current = entries[fieldId];
     if (!current) return;
+    const valueToSave = current.value;
     try {
-      const rows = await supaPost("tracker_entries", { field_id: fieldId, date: today, value: current.value }, "return=representation,resolution=merge-duplicates");
-      if (rows && rows[0]) entries[fieldId] = rows[0];
+      const rows = await supaPost("tracker_entries", { field_id: fieldId, date: today, value: valueToSave }, "return=representation,resolution=merge-duplicates");
+      // Only update from server if the value hasn't changed since we sent it
+      // (another click may have updated it optimistically while we were saving)
+      if (rows && rows[0] && entries[fieldId]?.value === valueToSave) {
+        entries[fieldId] = rows[0];
+      }
     } catch (err) {
       console.error("Save failed:", err);
     }
