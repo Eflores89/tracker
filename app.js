@@ -259,7 +259,24 @@ function cap(s) {
 
 // ---- Track action ----
 
-document.addEventListener("click", async (e) => {
+// Serialize saves per field to avoid race conditions (e.g. rapid mood clicks)
+const saveQueues = {};
+
+function enqueueSave(fieldId) {
+  if (!saveQueues[fieldId]) saveQueues[fieldId] = Promise.resolve();
+  saveQueues[fieldId] = saveQueues[fieldId].then(async () => {
+    const current = entries[fieldId];
+    if (!current) return;
+    try {
+      const rows = await supaPost("tracker_entries", { field_id: fieldId, date: today, value: current.value }, "return=representation,resolution=merge-duplicates");
+      if (rows && rows[0]) entries[fieldId] = rows[0];
+    } catch (err) {
+      console.error("Save failed:", err);
+    }
+  });
+}
+
+document.addEventListener("click", (e) => {
   const btn = e.target.closest("button[data-field-id]");
   if (!btn || btn.disabled) return;
 
@@ -293,13 +310,8 @@ document.addEventListener("click", async (e) => {
   }
   renderCards();
 
-  // Persist
-  try {
-    const rows = await supaPost("tracker_entries", { field_id: fieldId, date: today, value: newValue }, "return=representation,resolution=merge-duplicates");
-    if (rows && rows[0]) entries[fieldId] = rows[0];
-  } catch (err) {
-    console.error("Save failed:", err);
-  }
+  // Persist (serialized per field)
+  enqueueSave(fieldId);
 });
 
 // ---- Tab switching ----
