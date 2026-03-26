@@ -13,6 +13,7 @@
       <nav class="tabs">
         <button class="tab active" data-tab="track">Today</button>
         <button class="tab" data-tab="dashboard">Dashboard</button>
+        <button class="tab" data-tab="settings">Settings</button>
       </nav>
 
       <!-- Today tab -->
@@ -29,6 +30,72 @@
       <div id="tab-dashboard" class="tab-content hidden">
         <div id="streak-info" class="streak-info"></div>
         <div id="heatmap" class="heatmap-container"></div>
+      </div>
+
+      <!-- Settings tab -->
+      <div id="tab-settings" class="tab-content hidden">
+        <h2 class="section-title">Add new item</h2>
+        <form id="add-field-form" class="add-form">
+          <div class="form-row">
+            <label>Label <input type="text" name="label" required placeholder="e.g. Vitamin C" /></label>
+            <label>Icon <input type="text" name="icon" maxlength="4" placeholder="emoji" class="input-icon" /></label>
+          </div>
+          <div class="form-row">
+            <label>Type
+              <select name="type">
+                <option value="counter">Counter (e.g. 3 glasses)</option>
+                <option value="check">Checkbox (done / not done)</option>
+                <option value="select">Select one (e.g. good/bad)</option>
+                <option value="rating">Rating (1-5)</option>
+              </select>
+            </label>
+          </div>
+          <div id="type-options" class="form-row hidden">
+            <label>Options <input type="text" name="options" placeholder="hard, soft, none" /></label>
+          </div>
+          <div id="type-counter-opts" class="form-row hidden">
+            <label>Target <input type="number" name="max" min="1" max="99" value="3" class="input-sm" /></label>
+            <label>Unit <input type="text" name="unit" placeholder="glasses" /></label>
+          </div>
+          <div class="form-row">
+            <label>Color
+              <select name="color">
+                <option value="blue">Blue</option>
+                <option value="green">Green</option>
+                <option value="purple">Purple</option>
+                <option value="amber">Amber</option>
+                <option value="red">Red</option>
+                <option value="brown">Brown</option>
+                <option value="pink">Pink</option>
+              </select>
+            </label>
+          </div>
+          <div class="form-row">
+            <label>Recurrence
+              <select name="recurrence">
+                <option value="daily">Daily</option>
+                <option value="every_n_days">Every N days</option>
+              </select>
+            </label>
+          </div>
+          <div id="recurrence-opts" class="form-row hidden">
+            <label>Every <input type="number" name="recurrence_days" min="2" max="365" value="7" class="input-sm" /> days</label>
+            <label>Show <input type="number" name="show_days_before" min="0" max="30" value="2" class="input-sm" /> days before</label>
+          </div>
+          <div class="form-row">
+            <label>Expires
+              <input type="date" name="expires_at" />
+              <span class="hint">Leave blank for permanent items</span>
+            </label>
+          </div>
+          <button type="submit" class="btn btn-primary">Add item</button>
+        </form>
+
+        <h2 class="section-title">Active items</h2>
+        <div id="fields-list" class="fields-list"></div>
+
+        <h2 class="section-title">Archived items</h2>
+        <div id="fields-archived" class="fields-list"></div>
       </div>
     </main>
 
