@@ -3,8 +3,8 @@
  *
  * Set SUPABASE_URL and SUPABASE_ANON_KEY to your Supabase project values.
  */
-const SUPABASE_URL = "YOUR_SUPABASE_URL";
-const SUPABASE_ANON_KEY = "YOUR_SUPABASE_ANON_KEY";
+const SUPABASE_URL = "https://qstokkkkumjulgxubect.supabase.co";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InFzdG9ra2trdW1qdWxneHViZWN0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzQ1MTE2NzksImV4cCI6MjA5MDA4NzY3OX0.xjxUaMyS1QZYJZgm1Q79iG1-lg_uhLRrRjVk17bDhqo";
 
 // ---- Supabase REST helpers ----
 
